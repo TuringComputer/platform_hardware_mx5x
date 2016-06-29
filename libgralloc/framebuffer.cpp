@@ -408,7 +408,7 @@ static int fb_post(struct framebuffer_device_t* dev, buffer_handle_t buffer)
                 if(mapSecFrameBuffer(ctx)== 0)
                 {    
                     ctx->sec_display_inited = true;
-                    c2dCreateContext(&ctx->c2dctx); 
+                    c2dCreateContext(&ctx->c2dctx);
 
                     sem_init(&ctx->sec_display_begin, 0, 0);
                     sem_init(&ctx->sec_display_end, 0, 0);
@@ -451,12 +451,12 @@ static int fb_post(struct framebuffer_device_t* dev, buffer_handle_t buffer)
                 ctx->sec_disp_base = 0;
                 //DeInit the second display
                 if(ctx->sec_fp && ctx->video_play_mode == SIN_VIDEO_DUAL_UI) {
-                    int fp_property = open("/sys/class/graphics/fb1/fsl_disp_property",O_RDWR, 0); 
+                    int fp_property = open("/sys/class/graphics/fb1/fsl_disp_property",O_RDWR, 0);
                     if(fp_property >= 0) {
                         char overlayStr[32];
                         int blank;
                         int fb2_fp;
-			struct fb_var_screeninfo fb0_var;
+                        struct fb_var_screeninfo fb0_var;
 
                         blank = 1;
 
@@ -775,7 +775,7 @@ static int set_graphics_fb_mode(int fb, int dual_disp)
     char *disp_mode=NULL;
 
     char value[PROPERTY_VALUE_MAX];
-    property_get("ro.AUTO_CONFIG_DISPLAY", value, "0");
+    property_get("rw.AUTO_CONFIG_DISPLAY", value, "0");
     if (strcmp(value, "1") != 0)  return 0;
 
     fp_cmd = open("/proc/cmdline",O_RDONLY, 0);
@@ -788,7 +788,7 @@ static int set_graphics_fb_mode(int fb, int dual_disp)
     size = read(fp_cmd, cmd_line, sizeof(cmd_line));
     if(size <= 0)
     {
-        LOGI("Error! Cannot read /proc/cmdline");
+        LOGI("Error! Cannot read /proc/cmdline (%d)", size);
         goto set_graphics_fb_mode_error;
     }
 
@@ -816,7 +816,7 @@ static int set_graphics_fb_mode(int fb, int dual_disp)
     size = read(fp_modes, fb_modes, sizeof(fb_modes));
     if(size <= 0)
     {
-        LOGI("Error! Cannot read %s", temp_name);
+        LOGI("Error! Cannot read %s (%d)", temp_name, size);
         goto set_graphics_fb_mode_error;
     }
 
@@ -844,7 +844,7 @@ static int set_graphics_fb_mode(int fb, int dual_disp)
     size = read(fp_mode, fb_mode, sizeof(fb_mode));
     if(size <= 0)
     {
-        LOGI("Error! Cannot read %s", temp_name);
+        LOGI("Error! Cannot read %s (%d)", temp_name, size);
         goto set_graphics_fb_mode_error;
     }
 
@@ -1161,7 +1161,7 @@ static int mapSecFrameBuffer(fb_context_t* ctx)
      * switch overlay(IPU DP) to the secondary display FB
      * after all FBs are blanked.
      */
-    property_get("ro.SIN_VIDEO_DUAL_UI", value, "");
+    property_get("rw.SIN_VIDEO_DUAL_UI", value, "");
     if (!strcmp(value, "1")) {
         ctx->video_play_mode = SIN_VIDEO_DUAL_UI;
 
